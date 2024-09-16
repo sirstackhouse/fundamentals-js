@@ -75,32 +75,45 @@ const CourseInfo = {
   let learner_avg = (learner_total / assignmentGroup_total) * 100;
   console.log(learner_avg);
   
+
   // console.log(learner_total)
   
-  function getLearnerData(CourseInfo, AssignmentGroup, [LearnerSubmission]) {
+  function getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmission) {
     try {
       if (AssignmentGroup.course_id != CourseInfo.id) {
         throw new Error("This assignment group does not belong to a course.");
+      } 
+    } catch (error) {console.log("This assignment group does not belong to a course");
+        return[];
       }
-    } catch (error) {
-      console.error("This assignment group does not belong to a course.");
-  
+
       const currentDate = new Date();
   
       let learnerInfo = {};
-  
+        //Iterate over Submissions
       LearnerSubmissions.array.forEach((submission) => {
+        //Extract ID's
         const learnerID = submission.learner_id;
         const assignmentID = submission.assignment_id;
-  
+        //Find Assignment
         const assignment = AssignmentGroup.assignments.find(a => a.id === assignmentId);
         if (!assignment) return;
-  
+        // Convert Due Date to Date Object & check past due
         const assignDueDate = new Date(assignment.due_at);
-        if (assignmentDueDate > currentDate) {
+        if (assignDueDate > currentDate) {
           return;
         } 
+        if (addignment.points_possible <= 0) {
+            throw new Error(`Invalid possible points for ID ${assignmentID}`);
+        } 
+
+        //Late submission penalty
+        let score = submission.score;
+        const submittedDate = new Date(submission.submitted_at);
+        if (submittedDate > assignDueDate) {
+            score -= assignment.points_possible * 0.1;
+        }
+
       });
       
-    }
   }
