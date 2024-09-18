@@ -114,6 +114,8 @@ const CourseInfo = {
             score -= assignment.points_possible * 0.1;
         }
 
+        // Calculate score percentage
+        const scorePercentage = Math.max(0, (score / assignment.points_possible) * 100);
       });
       
   }
